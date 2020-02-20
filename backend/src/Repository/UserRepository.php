@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Study\User\Domain\Model\User as DomainUser;
 use Study\User\Domain\Repository\UserRepository as DomainUserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -42,5 +43,10 @@ class UserRepository implements DomainUserRepository, PasswordUpgraderInterface
         $user->setPassword($newEncodedPassword);
         $this->manager->persist($user);
         $this->manager->flush();
+    }
+
+    public function byEmail(string $email): ?DomainUser
+    {
+        return $this->manager->getRepository(User::class)->findOneBy(['email' => trim($email)]);
     }
 }

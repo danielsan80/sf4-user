@@ -1,0 +1,13 @@
+services:
+
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  Study\User\Domain\Repository\UserRepository:
+    alias: App\Repository\UserRepository
+
+
+  App\Repository\UserRepository:
+    class: App\Repository\UserRepository
+    lazy: true
