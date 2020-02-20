@@ -15,11 +15,13 @@ class User
 
 
 
-    public function __construct(string $id, string $email, string $password)
+    public function __construct(string $id, string $email, ?string $password=null)
     {
         $this->setId($id);
         $this->setEmail($email);
-        $this->setPassword($password);
+        if ($password) {
+            $this->setPassword($password);
+        }
     }
 
     /**
