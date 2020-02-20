@@ -1,0 +1,15 @@
+App\Entity\User:
+  type: entity
+  table: user
+  id:
+    id:
+      type: string
+      length: 255
+  fields:
+    email:
+      type: string
+      length: 255
+      unique: true
+    password:
+      type: string
+      length: 255
