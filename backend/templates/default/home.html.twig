@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <a href="{{ url('login') }}">Login</a>
+    <a href="{{ url('logout') }}">Logout</a>
+
+    <h1>Home</h1>
+
+    <a href="{{ url('a_page') }}">A page</a>
+{% endblock %}
