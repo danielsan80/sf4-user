@@ -1,9 +1,4 @@
 /.idea
 /.env
 
-
-
-/backend/**
-!/backend/**/
-
 !.gitkeep
