@@ -1,12 +1,41 @@
 <?php
 
-namespace App\Entity;
+namespace App\User;
 
 use Study\User\Domain\Model\User as DomainUser;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-class User extends DomainUser implements UserInterface
+class NullUser extends User
 {
+
+    public function __construct()
+    {
+    }
+
+
+    public function user(): DomainUser
+    {
+
+        throw new \LogicException('Method not supported');
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     *     public function getRoles()
+     *     {
+     *         return ['ROLE_USER'];
+     *     }
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        return [];
+    }
 
     /**
      * Returns the password used to authenticate the user.
@@ -18,7 +47,7 @@ class User extends DomainUser implements UserInterface
      */
     public function getPassword()
     {
-        return $this->password();
+        return null;
     }
 
     /**
@@ -40,7 +69,7 @@ class User extends DomainUser implements UserInterface
      */
     public function getUsername()
     {
-        return $this->email();
+        throw new \LogicException('Method not supported');
     }
 
     /**
@@ -51,24 +80,5 @@ class User extends DomainUser implements UserInterface
      */
     public function eraseCredentials()
     {
-    }
-
-    /**
-     * Returns the roles granted to the user.
-     *
-     *     public function getRoles()
-     *     {
-     *         return ['ROLE_USER'];
-     *     }
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
-     */
-    public function getRoles()
-    {
-        return ['ROLE_USER'];
     }
 }

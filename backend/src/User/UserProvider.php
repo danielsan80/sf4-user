@@ -1,15 +1,15 @@
 <?php
 
-namespace App\UserProvider;
+namespace App\User;
 
-use Study\User\Domain\Model\User;
 use Study\User\Domain\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface
+class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
 
     /** @var UserRepository */
@@ -34,7 +34,12 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        return $this->userRepository->byEmail($username);
+        $user = $this->userRepository->byEmail($username);
+        if (!$user) {
+            throw new UsernameNotFoundException(sprintf('User "%s" not found', $username));
+        }
+
+        return new User($user);
     }
 
     /**
@@ -52,16 +57,17 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
+
         if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
         }
 
-        $freshUser =  $this->userRepository->byEmail($user->email());
+        $freshUser = $this->userRepository->byEmail($user->getUsername());
         if (!$freshUser) {
             throw new UsernameNotFoundException(sprintf('User "%s" not found for refresh', $user->email()));
         }
 
-        return $freshUser;
+        return new User($freshUser);
     }
 
     /**
@@ -73,12 +79,22 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        if ($class === User::class) {
-            return true;
+        return $class === User::class;
+    }
+
+    /**
+     * Upgrades the encoded password of a user, typically for using a better hash algorithm.
+     *
+     * This method should persist the new password in the user storage and update the $user object accordingly.
+     * Because you don't want your users not being able to log in, this method should be opportunistic:
+     * it's fine if it does nothing or if it fails without throwing any exception.
+     */
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
-        $reflectionClass = new \ReflectionClass($class);
-
-        return $reflectionClass->isSubclassOf(User::class);
+        $user->user()->setPassword($newEncodedPassword);
     }
 }

@@ -1,4 +1,4 @@
-App\Entity\User:
+Study\User\Domain\Model\Infrastructure\Doctrine\DoctrineUser:
   type: entity
   table: user
   id:

@@ -2,10 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\User\NullUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
+use Study\User\Domain\Model\Infrastructure\Doctrine\DoctrineUser;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
@@ -20,10 +21,13 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $user = new User(Uuid::uuid4(), 'mario@example.com');
-        $user->setPassword($this->passwordEncoder->encodePassword($user, 'password'));
+        $user = new DoctrineUser(Uuid::uuid4(), 'mario@example.com', $this->encodePassword('password'));
         $manager->persist($user);
-
         $manager->flush();
+    }
+
+    protected function encodePassword(string $plainPassword)
+    {
+        return $this->passwordEncoder->encodePassword(new NullUser(), $plainPassword);
     }
 }

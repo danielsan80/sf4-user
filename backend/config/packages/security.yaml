@@ -1,6 +1,6 @@
 security:
     encoders:
-        App\Entity\User:
+        App\User\User:
             algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -8,7 +8,7 @@ security:
 #        users_in_memory: { memory: null }
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
-            id: App\UserProvider\UserProvider
+            id: App\User\UserProvider
 
     firewalls:
         dev:

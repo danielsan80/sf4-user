@@ -5,9 +5,8 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
   Study\User\Domain\Repository\UserRepository:
-    alias: App\Repository\UserRepository
+    alias: Study\User\Domain\Repository\Infrastructure\Doctrine\DoctrineUserRepository
 
 
-  App\Repository\UserRepository:
-    class: App\Repository\UserRepository
+  Study\User\Domain\Repository\Infrastructure\Doctrine\DoctrineUserRepository:
     lazy: true
