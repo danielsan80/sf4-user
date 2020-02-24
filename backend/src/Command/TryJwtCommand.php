@@ -4,21 +4,18 @@ namespace App\Command;
 
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class StudyTryJwtCommand extends Command
+class TryJwtCommand extends Command
 {
     protected static $defaultName = 'study:try-jwt';
 
     protected function configure()
     {
         $this
-            ->setDescription('Try to get a jwt token and access to an endpoint')
-        ;
+            ->setDescription('Try to get a jwt token and access to an endpoint');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -28,10 +25,10 @@ class StudyTryJwtCommand extends Command
             // Base URI is used with relative requests
             'base_uri' => 'http://web',
             // You can set any number of default request options.
-            'timeout'  => 2.0,
+            'timeout' => 2.0,
         ]);
 
-        $response = $client->post('/api/login_check',[
+        $response = $client->post('/api/login_check', [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
@@ -50,7 +47,7 @@ class StudyTryJwtCommand extends Command
 
         $response = $client->get('/api/hello', [
             'headers' => [
-                'Authorization' => 'Bearer '. $token
+                'Authorization' => 'Bearer ' . $token
             ]
         ]);
 
