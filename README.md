@@ -153,6 +153,23 @@ Un'ultima cosa degna di nota al più è come sono stati organizzati i servizi,
 rinominando `config/services.yaml` in `config/services_default.yaml` e creando un nuovo file `config/services.yaml` nel quale
 si importa `config/services_default.yaml` e il contenuto della cartella `config/services`.
 
+## JWT
+
+Ora proviamo ad aggiungere JWT.
+
+Installiamo il [LexikJWTAuthenticationBundle](https://github.com/lexik/LexikJWTAuthenticationBundle) 
+seguendo le istruzioni.
+
+> Qui c'è sempre da ricordarsi che il firewall `main` fa per ultimo perché è il fallback per tutto
+ciò che non viene intercettato dai precedenti. Insomma l'ordine è importante.
+
+Una volta seguite le istruzioni per provarlo possiamo usare PostMan oppure scrivere un Console Command in
+`src/Command`.
+
+Che ottiene il token JWT dalla rotta `app_login_check` per poi usarlo per accedere alla rotta
+protetta `/api/hello`.
+
+Potremo lanciarlo quindi con `sf study:try-jwt`.  
 
 
 
