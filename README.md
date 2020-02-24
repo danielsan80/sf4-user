@@ -166,7 +166,7 @@ ciò che non viene intercettato dai precedenti. Insomma l'ordine è importante.
 Una volta seguite le istruzioni per provarlo possiamo usare PostMan oppure scrivere un Console Command in
 `src/Command`.
 
-Che ottiene il token JWT dalla rotta `app_login_check` per poi usarlo per accedere alla rotta
+Questo, usanto [Guzzle](http://docs.guzzlephp.org/en/stable), ottiene il token JWT dalla rotta `app_login_check` per poi usarlo per accedere alla rotta
 protetta `/api/hello`.
 
 Potremo lanciarlo quindi con `sf study:try-jwt`.  
