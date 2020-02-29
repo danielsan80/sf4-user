@@ -1,22 +1,26 @@
 <?php
 
-namespace App\User;
+namespace App\Security\Credential;
 
-use Study\User\Domain\Model\User as DomainUser;
+use Study\Credential\Domain\Model\Credential as DomainCredential;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class NullUser extends User
+class Credential implements UserInterface
 {
 
-    public function __construct()
+    /** @var DomainCredential */
+    protected $credential;
+
+    public function __construct(DomainCredential $credential)
     {
+        $this->credential = $credential;
     }
 
-
-    public function user(): DomainUser
+    public function credential(): DomainCredential
     {
-
-        throw new \LogicException('Method not supported');
+        return $this->credential;
     }
+
 
     /**
      * Returns the roles granted to the user.
@@ -34,8 +38,9 @@ class NullUser extends User
      */
     public function getRoles()
     {
-        return [];
+        return ['ROLE_USER'];
     }
+
 
     /**
      * Returns the password used to authenticate the user.
@@ -47,7 +52,7 @@ class NullUser extends User
      */
     public function getPassword()
     {
-        return null;
+        return $this->credential->key();
     }
 
     /**
@@ -69,7 +74,7 @@ class NullUser extends User
      */
     public function getUsername()
     {
-        throw new \LogicException('Method not supported');
+        return $this->credential->key();
     }
 
     /**
@@ -81,4 +86,5 @@ class NullUser extends User
     public function eraseCredentials()
     {
     }
+
 }

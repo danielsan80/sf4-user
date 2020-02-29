@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User;
+namespace App\Security\User;
 
 use Study\User\Domain\Model\User as DomainUser;
 use Symfony\Component\Security\Core\User\UserInterface;

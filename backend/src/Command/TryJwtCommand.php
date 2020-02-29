@@ -3,6 +3,8 @@
 namespace App\Command;
 
 use GuzzleHttp\Client;
+use Lcobucci\JWT\Signer\Key;
+use Study\Credential\Domain\Model\KeyGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,13 +30,15 @@ class TryJwtCommand extends Command
             'timeout' => 2.0,
         ]);
 
+        $keyGenerator = new KeyGenerator();
+
         $response = $client->post('/api/login_check', [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
             'body' => json_encode([
-                'username' => 'mario@example.com',
-                'password' => 'password'
+                'username' => $keyGenerator->generate('a_seed'),
+                'password' => $keyGenerator->generate('a_seed')
             ])
         ]);
 

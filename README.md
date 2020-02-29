@@ -171,6 +171,8 @@ protetta `/api/hello`.
 
 Potremo lanciarlo quindi con `sf study:try-jwt`.  
 
+## Client
 
+Ora aggiungiamo una nuova entità, il Client.
 
 

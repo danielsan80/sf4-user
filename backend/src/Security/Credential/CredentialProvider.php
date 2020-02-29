@@ -1,7 +1,8 @@
 <?php
 
-namespace App\User;
+namespace App\Security\Credential;
 
+use Study\Credential\Domain\Repository\CredentialRepository;
 use Study\User\Domain\Repository\UserRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -9,15 +10,15 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
+class CredentialProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
 
-    /** @var UserRepository */
-    protected $userRepository;
+    /** @var CredentialRepository */
+    protected $credentialRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(CredentialRepository $credentialRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->credentialRepository = $credentialRepository;
     }
 
     /**
@@ -34,12 +35,12 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->userRepository->byEmail($username);
-        if (!$user) {
-            throw new UsernameNotFoundException(sprintf('User "%s" not found', $username));
+        $credential = $this->credentialRepository->bykey($username);
+        if (!$credential) {
+            throw new UsernameNotFoundException(sprintf('No Credential found for the given key'));
         }
 
-        return new User($user);
+        return new Credential($credential);
     }
 
     /**
@@ -58,16 +59,16 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     public function refreshUser(UserInterface $user)
     {
 
-        if (!$user instanceof User) {
+        if (!$user instanceof Credential) {
             throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
         }
 
-        $freshUser = $this->userRepository->byEmail($user->getUsername());
-        if (!$freshUser) {
-            throw new UsernameNotFoundException(sprintf('User "%s" not found for refresh', $user->email()));
+        $freshCredential = $this->credentialRepository->byKey($user->getUsername());
+        if (!$freshCredential) {
+            throw new UsernameNotFoundException(sprintf('Given credential not found for refresh'));
         }
 
-        return new User($freshUser);
+        return new Credential($freshCredential);
     }
 
     /**
@@ -79,7 +80,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      */
     public function supportsClass($class)
     {
-        return $class === User::class;
+        return $class === Credential::class;
     }
 
     /**
@@ -91,10 +92,10 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof Credential) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
-        $user->user()->setPassword($newEncodedPassword);
+        $credential->credential()->setKey($newEncodedPassword);
     }
 }

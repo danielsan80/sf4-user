@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\User\NullUser;
+use App\Security\User\NullUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;

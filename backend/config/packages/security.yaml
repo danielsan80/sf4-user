@@ -1,14 +1,19 @@
 security:
     encoders:
-        App\User\User:
+        App\Security\User\User:
             algorithm: auto
+        App\Security\Credential\Credential:
+            algorithm: plaintext
+
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
 #        users_in_memory: { memory: null }
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            id: App\User\UserProvider
+        user_provider:
+            id: App\Security\User\UserProvider
+        credential_provider:
+            id: App\Security\Credential\CredentialProvider
 
     firewalls:
         dev:
@@ -18,6 +23,7 @@ security:
             pattern:  ^/api/login
             stateless: true
             anonymous: true
+            provider: credential_provider
             json_login:
                 check_path:               /api/login_check
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
@@ -26,12 +32,13 @@ security:
         api:
             pattern:   ^/api
             stateless: true
+            provider: credential_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
         main:
             anonymous: lazy
-            provider: app_user_provider
+            provider: user_provider
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
