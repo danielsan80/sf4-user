@@ -2,17 +2,17 @@
 
 namespace Study\Common\Domain\Repository\Infrastructure\Doctrine;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 
 abstract class AbstractDoctrineRepository
 {
     /** @var ManagerRegistry */
     protected $registry;
-    /** @var ObjectManager */
+    /** @var EntityManagerInterface */
     protected $manager;
-    /** @var ObjectRepository */
+    /** @var EntityRepository */
     protected $repository;
     /** @var string */
     protected $entityClass;
@@ -23,8 +23,9 @@ abstract class AbstractDoctrineRepository
         $this->entityClass = $entityClass;
     }
 
-    protected function manager(): ObjectManager
+    protected function manager(): EntityManagerInterface
     {
+
         if ($this->manager) {
             return $this->manager;
         }
@@ -38,12 +39,20 @@ abstract class AbstractDoctrineRepository
             ));
         }
 
+        if (!$manager instanceof EntityManagerInterface) {
+            throw new \LogicException(sprintf(
+                'The found manager for class "%s" is not of type "%s" as expected',
+                $this->entityClass,
+                EntityManagerInterface::class
+            ));
+        }
+
         $this->manager = $manager;
 
         return $this->manager;
     }
 
-    protected function repository(): ObjectRepository
+    protected function repository(): EntityRepository
     {
         if ($this->repository) {
             return $this->repository;
